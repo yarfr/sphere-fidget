@@ -13,6 +13,8 @@ let angularVelocity = [0, 0, 0]; // Angular velocity of the sphere
 let friction = 0.98; // Friction to slow down the spin
 let vibrationInterval = null; // Interval for vibration
 
+let nextTick = -1;
+
 function setup() {
     createCanvas(windowWidth, windowHeight, WEBGL);
     updateDimensions();
@@ -39,12 +41,24 @@ function draw() {
 
             // Trigger vibration proportional to angular velocity
             if (typeof navigator !== 'undefined' && navigator.vibrate) {
-                if (vibrationInterval === null) {
-                    vibrationInterval = setInterval(() => {
-                        let vibrationDuration = map(angle, 0.001, 1, 100, 5); // Start with higher vibration and decrease
-                        navigator.vibrate(vibrationDuration);
-                    }, 100);
+                // if (vibrationInterval === null) {
+                //     vibrationInterval = setInterval(() => {
+                //         let vibrationDuration = map(angle, 0.001, 1, 100, 5); // Start with higher vibration and decrease
+                //         navigator.vibrate(vibrationDuration);
+                //     }, 100);
+                // }
+                // if (vibrationInterval === null) {
+                //     vibrationInterval = setInterval(() => {
+                //         // let vibrationDuration = map(angle, 0.001, 1, 100, 5); // Start with higher vibration and decrease
+                //         navigator.vibrate(100);
+                //         console.log('vibrating');
+                //     }, map(angle, 0.1, 0.001, 100, 1000));
+                // }
+                if (nextTick === -1 || frameCount >= nextTick) {
+                    navigator.vibrate(10);
+                    nextTick = frameCount + map(angle, 0.1, 0.001, 1, 50);
                 }
+
             }
         } else {
             angularVelocity = [0, 0, 0]; // Stop rotation when velocity is minimal
@@ -52,6 +66,7 @@ function draw() {
                 clearInterval(vibrationInterval);
                 vibrationInterval = null;
             }
+            nextTick = -1;
         }
     }
 
