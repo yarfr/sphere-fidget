@@ -243,8 +243,8 @@ function multiplyMatrices(a, b) {
 }
 
 function geodesicPolyhedronSubdivision(n, R) {
-    let vertices = [];
-    let faces = [];
+    let vertices;
+    let faces;
 
     // Generate the icosahedron
     [vertices, faces] = generateIcosahedron(R);
